@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Casa Fest — Painel Administrativo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Mobile Overlay -->
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <div class="app">
+    <!-- ========== SIDEBAR ========== -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <a class="brand" href="#" aria-label="La Casa Fest">
+          <span class="brand-mark">L</span>
+          <span class="brand-text">
+            <span class="brand-name">La Casa Fest</span>
+            <span class="brand-sub">Ferraz de Vasconcelos</span>
+          </span>
+        </a>
+        <button id="sidebar-collapse" class="icon-btn collapse-btn" title="Recolher menu" aria-label="Recolher menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <span class="nav-label">Principal</span>
+          <a href="#" class="nav-item active" data-page="dashboard">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item" data-page="orcamentos">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+            <span>Orçamentos</span>
+            <span id="nav-badge-pending" class="nav-badge" hidden>0</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <span class="nav-label">Gestão</span>
+          <a href="#" class="nav-item" data-page="calendario">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <span>Calendário</span>
+          </a>
+          <a href="#" class="nav-item" data-page="financeiro">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <span>Financeiro</span>
+          </a>
+          <a href="#" class="nav-item" data-page="relatorios">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            <span>Relatórios</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <span class="nav-label">Sistema</span>
+          <a href="#" class="nav-item" data-page="config">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>Configurações</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="connection-status" id="connection-status">
+          <span class="status-dot offline"></span>
+          <span class="status-text">Desconectado</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ========== MAIN ========== -->
+    <div class="main-wrapper">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <button id="mobile-menu-btn" class="icon-btn mobile-only" aria-label="Abrir menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          </button>
+          <div class="page-meta">
+            <nav class="breadcrumb" id="breadcrumb">
+              <span>Painel</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              <span id="breadcrumb-current">Dashboard</span>
+            </nav>
+            <h1 class="page-title" id="page-title">Dashboard</h1>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="header-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="search" id="global-search" placeholder="Buscar orçamentos..." autocomplete="off">
+          </div>
+
+          <button id="theme-toggle" class="icon-btn" title="Alternar tema" aria-label="Alternar tema">
+            <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+
+          <div class="notif-wrapper">
+            <button id="notif-btn" class="icon-btn" title="Notificações" aria-label="Notificações">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span id="notif-count" class="notif-count" hidden>0</span>
+            </button>
+            <div id="notif-dropdown" class="dropdown notif-dropdown" hidden>
+              <div class="dropdown-header">
+                <strong>Notificações</strong>
+                <button id="clear-notifs" class="link-btn">Limpar</button>
+              </div>
+              <div id="notif-list" class="notif-list">
+                <div class="empty-notif">Nenhuma notificação</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-wrapper">
+            <button id="profile-btn" class="profile-btn" aria-label="Menu do usuário">
+              <span class="avatar">A</span>
+              <span class="profile-info">
+                <span class="profile-name">Admin</span>
+                <span class="profile-role">Administrador</span>
+              </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="profile-dropdown" class="dropdown profile-dropdown" hidden>
+              <a href="#" class="dropdown-item" data-page="config">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Meu perfil
+              </a>
+              <a href="#" class="dropdown-item" data-page="config">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Configurações
+              </a>
+              <div class="dropdown-divider"></div>
+              <button id="logout-btn" class="dropdown-item danger">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                Sair
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="content">
+        <!-- ========== DASHBOARD PAGE ========== -->
+        <section id="page-dashboard" class="page active">
+          <!-- Auth Gate -->
+          <div id="auth-gate" class="auth-gate">
+            <div class="auth-card">
+              <div class="auth-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <h2>Acesso administrativo</h2>
+              <p>Informe o token de acesso para carregar os dados do sistema.</p>
+              <div class="field">
+                <label for="admin-token">Token de acesso</label>
+                <input id="admin-token" type="password" autocomplete="off" placeholder="Cole o token secreto aqui">
+              </div>
+              <button id="connect-btn" class="btn btn-primary btn-block">
+                <span class="btn-text">Conectar ao sistema</span>
+                <span class="btn-loading" hidden>
+                  <span class="spinner"></span> Conectando...
+                </span>
+              </button>
+              <p id="auth-error" class="auth-error" hidden></p>
+            </div>
+          </div>
+
+          <!-- Dashboard Content (hidden until connected) -->
+          <div id="dashboard-content" hidden>
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+              <article class="stat-card" style="--delay: 0">
+                <div class="stat-icon gold">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                </div>
+                <div class="stat-body">
+                  <span class="stat-label">Total de orçamentos</span>
+                  <strong class="stat-value" id="stat-total">0</strong>
+                  <span class="stat-hint" id="stat-total-hint">Carregando...</span>
+                </div>
+              </article>
+
+              <article class="stat-card" style="--delay: 1">
+                <div class="stat-icon warning">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <div class="stat-body">
+                  <span class="stat-label">Pendentes</span>
+                  <strong class="stat-value" id="stat-pending">0</strong>
+                  <span class="stat-hint" id="stat-pending-hint">Aguardando ação</span>
+                </div>
+              </article>
+
+              <article class="stat-card" style="--delay: 2">
+                <div class="stat-icon success">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                </div>
+                <div class="stat-body">
+                  <span class="stat-label">Confirmados</span>
+                  <strong class="stat-value" id="stat-confirmed">0</strong>
+                  <span class="stat-hint" id="stat-confirmed-hint">Contratos fechados</span>
+                </div>
+              </article>
+
+              <article class="stat-card" style="--delay: 3">
+                <div class="stat-icon cyan">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <div class="stat-body">
+                  <span class="stat-label">Faturamento</span>
+                  <strong class="stat-value" id="stat-revenue">R$ 0,00</strong>
+                  <span class="stat-hint" id="stat-revenue-hint">Valor contratado</span>
+                </div>
+              </article>
+
+              <article class="stat-card" style="--delay: 4">
+                <div class="stat-icon purple">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                </div>
+                <div class="stat-body">
+                  <span class="stat-label">Próximo evento</span>
+                  <strong class="stat-value" id="stat-next">—</strong>
+                  <span class="stat-hint" id="stat-next-hint">Data mais próxima</span>
+                </div>
+              </article>
+
+              <article class="stat-card" style="--delay: 5">
+                <div class="stat-icon danger">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+                </div>
+                <div class="stat-body">
+                  <span class="stat-label">Cancelados</span>
+                  <strong class="stat-value" id="stat-cancelled">0</strong>
+                  <span class="stat-hint" id="stat-cancelled-hint">Datas liberadas</span>
+                </div>
+              </article>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+              <div class="card chart-card">
+                <div class="card-header">
+                  <div>
+                    <h3>Orçamentos por status</h3>
+                    <p>Distribuição atual</p>
+                  </div>
+                </div>
+                <div class="chart-container">
+                  <canvas id="chart-status"></canvas>
+                </div>
+              </div>
+
+              <div class="card chart-card">
+                <div class="card-header">
+                  <div>
+                    <h3>Tipos de evento</h3>
+                    <p>Mais solicitados</p>
+                  </div>
+                </div>
+                <div class="chart-container">
+                  <canvas id="chart-events"></canvas>
+                </div>
+              </div>
+
+              <div class="card chart-card wide">
+                <div class="card-header">
+                  <div>
+                    <h3>Faturamento confirmado</h3>
+                    <p>Evolução por mês</p>
+                  </div>
+                </div>
+                <div class="chart-container chart-tall">
+                  <canvas id="chart-revenue"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Table -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3>Últimos orçamentos</h3>
+                  <p>Solicitações mais recentes</p>
+                </div>
+                <button class="btn btn-ghost" data-page="orcamentos">Ver todos</button>
+              </div>
+              <div class="table-wrapper">
+                <table class="data-table" id="recent-table">
+                  <thead>
+                    <tr>
+                      <th>Cliente</th>
+                      <th>Evento</th>
+                      <th>Data</th>
+                      <th>Status</th>
+                      <th>Valor</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recent-body"></tbody>
+                </table>
+                <div id="recent-empty" class="empty-state" hidden>Nenhum orçamento ainda.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== ORÇAMENTOS PAGE ========== -->
+        <section id="page-orcamentos" class="page">
+          <div class="page-toolbar">
+            <div class="toolbar-filters">
+              <div class="search-field">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input type="search" id="search-input" placeholder="Nome, telefone ou tipo de evento..." disabled>
+              </div>
+              <select id="status-filter" class="select" disabled>
+                <option value="TODOS">Todos os status</option>
+                <option value="PENDENTE">Pendentes</option>
+                <option value="CONFIRMADO">Confirmados</option>
+                <option value="CANCELADO">Cancelados</option>
+              </select>
+            </div>
+            <div class="toolbar-actions">
+              <span id="result-count" class="result-count"></span>
+              <button id="refresh-btn" class="btn btn-secondary" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                Atualizar
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="table-wrapper">
+              <table class="data-table" id="budgets-table">
+                <thead>
+                  <tr>
+                    <th data-sort="nome">Nome <span class="sort-icon"></span></th>
+                    <th data-sort="telefone">Telefone</th>
+                    <th data-sort="tipoEvento">Tipo de evento</th>
+                    <th data-sort="dataEvento">Data</th>
+                    <th data-sort="quantidadeConvidados">Convidados</th>
+                    <th data-sort="status">Status</th>
+                    <th data-sort="valorContrato">Valor</th>
+                    <th>Mensagem</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="budgets-body"></tbody>
+              </table>
+              <div id="empty-state" class="empty-state">Conecte-se ao sistema para visualizar os orçamentos.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== CALENDÁRIO PAGE ========== -->
+        <section id="page-calendario" class="page">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>Calendário de eventos</h3>
+                <p>Datas bloqueadas (pendentes e confirmadas)</p>
+              </div>
+            </div>
+            <div id="calendar-grid" class="calendar-grid">
+              <div class="empty-state">Conecte-se para visualizar o calendário.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== FINANCEIRO PAGE ========== -->
+        <section id="page-financeiro" class="page">
+          <div class="stats-grid compact">
+            <article class="stat-card">
+              <div class="stat-icon success">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div class="stat-body">
+                <span class="stat-label">Total contratado</span>
+                <strong class="stat-value" id="fin-total">R$ 0,00</strong>
+              </div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-icon gold">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+              </div>
+              <div class="stat-body">
+                <span class="stat-label">Contratos fechados</span>
+                <strong class="stat-value" id="fin-count">0</strong>
+              </div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-icon cyan">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+              </div>
+              <div class="stat-body">
+                <span class="stat-label">Ticket médio</span>
+                <strong class="stat-value" id="fin-avg">R$ 0,00</strong>
+              </div>
+            </article>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>Contratos confirmados</h3>
+                <p>Lista de valores fechados</p>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th>Evento</th>
+                    <th>Data</th>
+                    <th>Convidados</th>
+                    <th>Valor do contrato</th>
+                  </tr>
+                </thead>
+                <tbody id="financeiro-body"></tbody>
+              </table>
+              <div id="financeiro-empty" class="empty-state">Nenhum contrato confirmado ainda.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== RELATÓRIOS PAGE ========== -->
+        <section id="page-relatorios" class="page">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>Resumo geral</h3>
+                <p>Visão consolidada do sistema</p>
+              </div>
+            </div>
+            <div id="relatorio-content" class="relatorio-content">
+              <div class="empty-state">Conecte-se para gerar relatórios.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== CONFIG PAGE ========== -->
+        <section id="page-config" class="page">
+          <div class="config-grid">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3>Conexão com a API</h3>
+                  <p>Configurações de acesso ao backend</p>
+                </div>
+              </div>
+              <div class="config-form">
+                <div class="field">
+                  <label for="config-api-url">URL da API</label>
+                  <input id="config-api-url" type="url" value="https://backend-olfs.onrender.com/api/orcamentos">
+                </div>
+                <div class="field">
+                  <label for="config-token">Token administrativo</label>
+                  <input id="config-token" type="password" autocomplete="off" placeholder="Token secreto">
+                </div>
+                <button id="save-config-btn" class="btn btn-primary">Salvar configurações</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3>Preferências</h3>
+                  <p>Aparência e comportamento</p>
+                </div>
+              </div>
+              <div class="config-form">
+                <div class="toggle-row">
+                  <div>
+                    <strong>Tema escuro</strong>
+                    <p>Interface com fundo escuro</p>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" id="pref-dark" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="toggle-row">
+                  <div>
+                    <strong>Sidebar recolhida</strong>
+                    <p>Iniciar com menu minimizado</p>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" id="pref-sidebar">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- ========== MODAL: Confirmar ========== -->
+  <div id="modal-confirm" class="modal" hidden>
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Confirmar contrato</h3>
+        <button class="icon-btn modal-close" aria-label="Fechar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Informe o valor fechado do contrato. A data permanecerá reservada.</p>
+        <div class="field">
+          <label for="confirm-valor">Valor do contrato (R$)</label>
+          <input id="confirm-valor" type="text" inputmode="decimal" placeholder="Ex: 3500,00" autocomplete="off">
+        </div>
+        <div id="confirm-preview" class="confirm-preview" hidden>
+          <span>Cliente:</span> <strong id="confirm-nome"></strong><br>
+          <span>Evento:</span> <strong id="confirm-evento"></strong><br>
+          <span>Data:</span> <strong id="confirm-data"></strong>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost modal-close">Cancelar</button>
+        <button id="confirm-submit" class="btn btn-success">
+          <span class="btn-text">Confirmar contrato</span>
+          <span class="btn-loading" hidden><span class="spinner"></span> Confirmando...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL: Cancelar ========== -->
+  <div id="modal-cancel" class="modal" hidden>
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Cancelar orçamento</h3>
+        <button class="icon-btn modal-close" aria-label="Fechar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="warning-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          <div>
+            <strong>Atenção</strong>
+            <p>O histórico será mantido e a data será liberada para novos pedidos.</p>
+          </div>
+        </div>
+        <div id="cancel-preview" class="confirm-preview">
+          <span>Cliente:</span> <strong id="cancel-nome"></strong><br>
+          <span>Evento:</span> <strong id="cancel-evento"></strong><br>
+          <span>Data:</span> <strong id="cancel-data"></strong>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost modal-close">Voltar</button>
+        <button id="cancel-submit" class="btn btn-danger">
+          <span class="btn-text">Sim, cancelar</span>
+          <span class="btn-loading" hidden><span class="spinner"></span> Cancelando...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL: Detalhes ========== -->
+  <div id="modal-detail" class="modal" hidden>
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3>Detalhes do orçamento</h3>
+        <button class="icon-btn modal-close" aria-label="Fechar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" id="detail-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost modal-close">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
